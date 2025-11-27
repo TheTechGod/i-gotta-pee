@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+iGottaPee
 
-## Getting Started
+A bathroom-locator web app built with Next.js, Supabase, and Leaflet.
+The project includes a public map for users and a secure admin panel for managing bathroom locations.
 
-First, run the development server:
+Tech Stack
 
-```bash
+Next.js (App Router)
+
+Supabase — Database, Auth, and future Storage
+
+Leaflet — Interactive map and pins
+
+TailwindCSS — Styling
+
+Local Development
+
+Install dependencies:
+
+npm install
+
+
+Run the local server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app will be available at:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+http://localhost:3000
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Environment variables must be set in .env.local:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+NEXT_PUBLIC_SUPABASE_URL=your-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_JWT_SECRET=your-jwt-secret
 
-## Deploy on Vercel
+Project Structure
+app/
+  map/                  → Public map page
+  admin/
+    login/              → Admin login page
+    bathrooms/          → Admin bathroom list, add, edit
+components/
+  UI/                   → Shared UI components
+  admin/                → Admin-specific components
+lib/
+  supabase/             → Client + server Supabase helpers
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Core Features (Phase 1 MVP)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Public Leaflet map
+
+Bathroom pins loaded from Supabase
+
+Admin authentication
+
+Add Bathroom (no photos)
+
+Edit + Delete Bathroom
+
+Admin filters (ZIP, neighborhood, search)
+
+Success/error banners
+
+Planned Features
+
+GPS “Find Nearest Bathroom”
+
+Photo uploads (Supabase Storage)
+
+Better mobile UI
+
+PWA install option
+
+Ratings + reviews
+
+Favorites
+
+Search + filters for public map
+
+Deployment
+
+This project is built for deployment on Vercel.
+Push to GitHub → Vercel auto-builds and deploys.
