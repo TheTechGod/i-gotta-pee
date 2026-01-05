@@ -1,15 +1,18 @@
 "use client";
-import { useState } from "react";
+
+type DeleteModalProps = {
+  bathroom: any | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+  isDeleting?: boolean;
+};
 
 export default function DeleteModal({
   bathroom,
-  onConfirm,
   onCancel,
-}: {
-  bathroom: any;
-  onConfirm: () => void;
-  onCancel: () => void;
-}) {
+  onConfirm,
+  isDeleting = false,
+}: DeleteModalProps) {
   if (!bathroom) return null;
 
   return (
@@ -24,16 +27,18 @@ export default function DeleteModal({
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+            disabled={isDeleting}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 disabled:opacity-50"
           >
             Cancel
           </button>
 
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            disabled={isDeleting}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
           >
-            Yes, Delete
+            {isDeleting ? "Deleting..." : "Yes, Delete"}
           </button>
         </div>
       </div>

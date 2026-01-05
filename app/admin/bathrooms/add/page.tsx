@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -12,6 +11,8 @@ export default function AddBathroomPage() {
   const [neighborhood, setNeighborhood] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -48,13 +49,43 @@ export default function AddBathroomPage() {
   }
 
   // ------------------------------------------------------------
-  // SUBMIT NEW BATHROOM
+  // HANDLE SUBMIT (INSERT + IMAGE UPLOAD)
   // ------------------------------------------------------------
   async function handleSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
+    let photo_url = null;
+
+    // -------------------------
+    // 1. Upload image if selected
+    // -------------------------
+    if (photoFile) {
+      const fileExt = photoFile.name.split(".").pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `bathrooms/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("bathroom-images")
+        .upload(filePath, photoFile);
+
+      if (uploadError) {
+        setMessage("Failed to upload image: " + uploadError.message);
+        setLoading(false);
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("bathroom-images")
+        .getPublicUrl(filePath);
+
+      photo_url = urlData.publicUrl;
+    }
+
+    // -------------------------
+    // 2. Insert bathroom record
+    // -------------------------
     const { error } = await supabase.from("bathrooms").insert([
       {
         name,
@@ -63,6 +94,7 @@ export default function AddBathroomPage() {
         neighborhood,
         latitude,
         longitude,
+        photo_url, // save image URL in DB
       },
     ]);
 
@@ -82,6 +114,7 @@ export default function AddBathroomPage() {
     setNeighborhood("");
     setLatitude("");
     setLongitude("");
+    setPhotoFile(null);
   }
 
   // ------------------------------------------------------------
@@ -111,7 +144,7 @@ export default function AddBathroomPage() {
             <input
               type="text"
               placeholder="Bathroom name"
-              className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+              className="p-2 w-full border rounded"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -128,7 +161,7 @@ export default function AddBathroomPage() {
               <input
                 type="text"
                 placeholder="Full street address"
-                className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+                className="p-2 w-full border rounded"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
@@ -152,7 +185,7 @@ export default function AddBathroomPage() {
             <input
               type="text"
               placeholder="60601"
-              className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+              className="p-2 w-full border rounded"
               value={zip}
               onChange={(e) => setZip(e.target.value)}
             />
@@ -166,7 +199,7 @@ export default function AddBathroomPage() {
             <input
               type="text"
               placeholder="Bronzeville"
-              className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+              className="p-2 w-full border rounded"
               value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
             />
@@ -180,7 +213,7 @@ export default function AddBathroomPage() {
             <input
               type="text"
               placeholder="Auto-filled or enter manually"
-              className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+              className="p-2 w-full border rounded"
               value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
             />
@@ -194,13 +227,28 @@ export default function AddBathroomPage() {
             <input
               type="text"
               placeholder="Auto-filled or enter manually"
-              className="p-2 w-full border rounded text-gray-900 placeholder-gray-500"
+              className="p-2 w-full border rounded"
               value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
             />
           </div>
 
-          {/* SUBMIT BUTTON */}
+          {/* PHOTO UPLOAD */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Upload Photo
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              className="p-2 border rounded w-full bg-white"
+              onChange={(e) =>
+                setPhotoFile(e.target.files?.[0] ?? null)
+              }
+            />
+          </div>
+
+          {/* SUBMIT */}
           <button
             type="submit"
             disabled={loading}

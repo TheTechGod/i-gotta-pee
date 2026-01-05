@@ -1,4 +1,5 @@
 // app/admin/bathrooms/page.tsx
+
 import { supabaseServer } from "@/lib/supabaseServer";
 import AdminNav from "@/components/admin/AdminNav";
 import FilterBar from "./FilterBar";
@@ -8,9 +9,9 @@ import SuccessBanner from "@/components/SuccessBanner";
 export default async function BathroomsListPage() {
   const supabase = await supabaseServer();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Check user session
+  const { data: sessionData } = await supabase.auth.getSession();
+  const session = sessionData?.session;
 
   if (!session) {
     return (
@@ -22,10 +23,14 @@ export default async function BathroomsListPage() {
     );
   }
 
-  const { data: bathrooms = [], error } = await supabase
+  // Fetch bathrooms safely
+  const { data, error } = await supabase
     .from("bathrooms")
     .select("*")
     .order("name", { ascending: true });
+
+  // Ensure bathrooms is always an array to satisfy FilterBar & BathroomsTable
+  const bathrooms = data ?? [];
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -47,9 +52,12 @@ export default async function BathroomsListPage() {
         <SuccessBanner />
 
         {error && (
-          <p className="mb-4 p-2 rounded bg-red-100 text-red-800">{error.message}</p>
+          <p className="mb-4 p-2 rounded bg-red-100 text-red-800">
+            {error.message}
+          </p>
         )}
 
+        {/* Pass guaranteed arrays */}
         <FilterBar bathrooms={bathrooms} />
         <BathroomsTable bathrooms={bathrooms} />
       </div>

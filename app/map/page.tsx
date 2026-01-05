@@ -1,27 +1,36 @@
 // app/map/page.tsx
+import { supabaseServer } from "@/lib/supabaseServer";
+import PublicMapClient from "@/components/PublicMapClient";
+import AuthHeader from "@/components/AuthHeader";
+import PublicBathroomsClient from "@/components/PublicBathroomsClient";
 
-"use client";
-  
-import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("@/components/UI/Map"), {
-  ssr: false, // Required because Leaflet is client-only
-});
+export default async function PublicMapPage() {
+  const supabase = await supabaseServer();
 
-export default function PublicMapPage() {
+  const { data = [], error } = await supabase
+    .from("bathrooms")
+    .select("id, name, address, latitude, longitude, zip");
+
+  if (error) {
+    console.error(error.message);
+  }
+
   return (
     <main className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-3xl font-bold mb-4 text-gray-900">
-        Bathroom Map
-      </h1>
+      <header className="flex items-center justify-between p-4 bg-white shadow">
+              <h1 className="text-xl font-bold">iGottaPee</h1>
+              <AuthHeader />
+            </header>
+      <header className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Bathroom Map</h1>
 
-      <p className="text-gray-700 mb-4">
-        Find bathrooms near you. Tap a marker to view the details.
-      </p>
+        <a href="/" className="text-blue-600 hover:underline text-sm">
+          ← List View
+        </a>
+      </header>
 
-      <div className="w-full h-[600px]">
-        <Map />
-      </div>
+      <PublicMapClient bathrooms={data} />
     </main>
   );
 }
