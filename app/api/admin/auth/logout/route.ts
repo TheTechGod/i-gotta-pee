@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-export async function POST() {
+export async function GET() {
   const supabase = await supabaseServer();
 
-  // signs out server-side (clears auth cookies if you're using them)
-  await supabase.auth.signOut();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ session });
 }
