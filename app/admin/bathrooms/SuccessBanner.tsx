@@ -22,10 +22,12 @@ export default async function BathroomsListPage() {
     );
   }
 
-  const { data: bathrooms = [], error } = await supabase
+  const { data: bathrooms, error } = await supabase
     .from("bathrooms")
     .select("*")
     .order("name", { ascending: true });
+
+  const safeBathrooms = bathrooms ?? [];
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -35,15 +37,12 @@ export default async function BathroomsListPage() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold text-gray-900">Bathrooms</h1>
 
-          <a
-            href="/admin/bathrooms/add"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700"
-          >
+          
+            <a href="/admin/bathrooms/add" className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700">
             + Add Bathroom
           </a>
         </div>
 
-        {/* CLIENT SUCCESS BANNER */}
         <SuccessBanner />
 
         {error && (
@@ -52,8 +51,8 @@ export default async function BathroomsListPage() {
           </p>
         )}
 
-        <FilterBar bathrooms={bathrooms} />
-        <BathroomsTable bathrooms={bathrooms} />
+        <FilterBar bathrooms={safeBathrooms} />
+        <BathroomsTable bathrooms={safeBathrooms} />
       </div>
     </main>
   );

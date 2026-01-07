@@ -6,14 +6,16 @@ import PublicBathroomsClient from "@/components/PublicBathroomsClient";
 export default async function PublicBathroomsPage() {
   const supabase = await supabaseServer();
 
-  const { data = [], error } = await supabase
+  const { data, error } = await supabase
     .from("bathrooms")
-    .select("id, name, address, zip")
+    .select("id, name, address, zip, neighborhood, accessibility, latitude, longitude")
     .order("name");
 
   if (error) {
     console.error(error.message);
   }
+
+  const safeBathrooms = data ?? [];
 
   return (
     <main className="min-h-screen bg-gray-100 p-4">
@@ -38,7 +40,7 @@ export default async function PublicBathroomsPage() {
           <p className="text-red-600 mb-4">Failed to load bathrooms</p>
         )}
 
-        <PublicBathroomsClient bathrooms={data} />
+        <PublicBathroomsClient bathrooms={safeBathrooms} />
       </section>
     </main>
   );

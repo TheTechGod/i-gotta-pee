@@ -8,13 +8,15 @@ import PublicBathroomsClient from "@/components/PublicBathroomsClient";
 export default async function PublicMapPage() {
   const supabase = await supabaseServer();
 
-  const { data = [], error } = await supabase
+  const { data, error } = await supabase
     .from("bathrooms")
     .select("id, name, address, latitude, longitude, zip");
 
   if (error) {
     console.error(error.message);
   }
+
+  const safeBathrooms = data ?? [];
 
   return (
     <main className="min-h-screen bg-gray-100 p-4">
@@ -30,7 +32,7 @@ export default async function PublicMapPage() {
         </a>
       </header>
 
-      <PublicMapClient bathrooms={data} />
+      <PublicMapClient bathrooms={safeBathrooms} />
     </main>
   );
 }

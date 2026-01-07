@@ -1,15 +1,15 @@
 // app/admin/bathrooms/page.tsx
-
 import { supabaseServer } from "@/lib/supabaseServer";
 import AdminNav from "@/components/admin/AdminNav";
 import FilterBar from "./FilterBar";
 import BathroomsTable from "./BathroomsTable";
 import SuccessBanner from "@/components/SuccessBanner";
+import type { Bathroom } from "@/app/types/Bathroom";
 
 export default async function BathroomsListPage() {
   const supabase = await supabaseServer();
 
-  // Check user session
+  // ✅ Auth check
   const { data: sessionData } = await supabase.auth.getSession();
   const session = sessionData?.session;
 
@@ -23,14 +23,14 @@ export default async function BathroomsListPage() {
     );
   }
 
-  // Fetch bathrooms safely
+  // ✅ Typed fetch + guaranteed array
   const { data, error } = await supabase
     .from("bathrooms")
-    .select("*")
-    .order("name", { ascending: true });
+    .select("id,name,address,zip,neighborhood,accessibility,latitude,longitude,created_at")
+    .order("name", { ascending: true })
+    .returns<Bathroom[]>();
 
-  // Ensure bathrooms is always an array to satisfy FilterBar & BathroomsTable
-  const bathrooms = data ?? [];
+  const bathrooms: Bathroom[] = data ?? [];
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -48,7 +48,6 @@ export default async function BathroomsListPage() {
           </a>
         </div>
 
-        {/* Client-side success banner */}
         <SuccessBanner />
 
         {error && (
@@ -57,10 +56,10 @@ export default async function BathroomsListPage() {
           </p>
         )}
 
-        {/* Pass guaranteed arrays */}
         <FilterBar bathrooms={bathrooms} />
         <BathroomsTable bathrooms={bathrooms} />
       </div>
     </main>
   );
 }
+

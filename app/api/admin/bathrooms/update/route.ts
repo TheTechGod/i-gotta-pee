@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
 
-export async function PATCH() {
-  return NextResponse.json({ message: "Update endpoint placeholder" });
+export async function GET() {
+  return NextResponse.json({ ok: true });
 }

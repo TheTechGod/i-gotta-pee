@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
 
-export async function DELETE() {
-  return NextResponse.json({ message: "Delete endpoint placeholder" });
+export async function GET() {
+  return NextResponse.json({ ok: true });
 }

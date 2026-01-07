@@ -1,12 +1,17 @@
+// app/admin/bathrooms/deleteBathroomAction.ts
 "use server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
-import { redirect } from "next/navigation";
 
 export async function deleteBathroom(id: string) {
   const supabase = await supabaseServer();
 
-  await supabase.from("bathrooms").delete().eq("id", id);
+  const { error } = await supabase
+    .from("bathrooms")
+    .delete()
+    .eq("id", id);
 
-  redirect("/admin/bathrooms?deleted=1");
+  if (error) {
+    throw new Error(error.message);
+  }
 }
