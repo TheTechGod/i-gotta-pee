@@ -1,3 +1,5 @@
+// app/admin/bathrooms/add/page.tsx
+
 "use client";
 
 import { useState } from "react";
