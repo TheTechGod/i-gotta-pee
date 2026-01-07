@@ -53,7 +53,7 @@ export default function AddBathroomPage() {
   // ------------------------------------------------------------
   // HANDLE SUBMIT (INSERT + IMAGE UPLOAD)
   // ------------------------------------------------------------
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setMessage("");
