@@ -1,4 +1,12 @@
 // app/admin/bathrooms/page.tsx
+
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, viewport height, and footer
+ * are controlled by app/layout.tsx.
+ */
+
 import { supabaseServer } from "@/lib/supabaseServer";
 import AdminNav from "@/components/admin/AdminNav";
 import FilterBar from "./FilterBar";
@@ -15,30 +23,34 @@ export default async function BathroomsListPage() {
 
   if (!session) {
     return (
-      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="bg-gray-100 flex items-center justify-center py-20">
         <p className="text-gray-800 text-lg font-semibold">
           Unauthorized – please log in.
         </p>
-      </main>
+      </div>
     );
   }
 
   // ✅ Typed fetch + guaranteed array
   const { data, error } = await supabase
     .from("bathrooms")
-    .select("id,name,address,zip,neighborhood,accessibility,latitude,longitude,created_at")
+    .select(
+      "id,name,address,zip,neighborhood,accessibility,latitude,longitude,created_at"
+    )
     .order("name", { ascending: true })
     .returns<Bathroom[]>();
 
   const bathrooms: Bathroom[] = data ?? [];
 
   return (
-    <main className="min-h-screen bg-gray-100">
+    <div className="bg-gray-100">
       <AdminNav />
 
-      <div className="max-w-6xl mx-auto p-6">
+      <section className="max-w-6xl mx-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-bold text-gray-900">Bathrooms</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Bathrooms
+          </h1>
 
           <a
             href="/admin/bathrooms/add"
@@ -58,8 +70,7 @@ export default async function BathroomsListPage() {
 
         <FilterBar bathrooms={bathrooms} />
         <BathroomsTable bathrooms={bathrooms} />
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }
-

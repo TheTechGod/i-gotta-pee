@@ -1,9 +1,7 @@
 // app/layout.tsx
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BodyFix from "@/components/BodyFix";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,25 +13,43 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "iGottaPee Admin",
-  description: "Bathroom locator admin panel",
+export const metadata: Metadata = {
+  title: "iGottaPee",
+  description: "Find public bathrooms near you",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
-        {/* 🔧 Fix hydration mismatch caused by dev overlay scrollbar */}
-        <BodyFix />
+        {/* 
+          Root layout owns structure.
+          Pages render CONTENT ONLY.
+        */}
+        <div className="min-h-screen flex flex-col">
+          {/* Main page content */}
+          <div className="flex-1">
+            {children}
+          </div>
 
-        {children}
+          {/* Global footer */}
+          <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500 bg-white">
+            <a
+              href="https://integrityprogramming.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-800 underline-offset-4 hover:underline"
+            >
+              Built by Integrity Programming
+            </a>
+          </footer>
+        </div>
       </body>
     </html>
   );

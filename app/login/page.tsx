@@ -1,4 +1,12 @@
+// app/login/page.tsx
 "use client";
+
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, viewport height, and footer
+ * are controlled by app/layout.tsx.
+ */
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
@@ -24,12 +32,16 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/"; // public map
+    // Redirect to public map after login
+    window.location.href = "/";
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow w-full max-w-sm space-y-4">
+    <div className="bg-gray-100 flex items-center justify-center py-20">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-6 rounded shadow w-full max-w-sm space-y-4"
+      >
         <h1 className="text-xl font-bold">Log In</h1>
 
         <input
@@ -50,10 +62,14 @@ export default function LoginPage() {
           required
         />
 
-        <button className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
+        >
           {loading ? "Logging in..." : "Log In"}
         </button>
       </form>
-    </main>
+    </div>
   );
 }

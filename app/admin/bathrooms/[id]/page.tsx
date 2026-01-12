@@ -1,9 +1,20 @@
-// /app/admin/bathrooms/[id]/page.tsx
+// app/admin/bathrooms/[id]/page.tsx
+
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, viewport height, and footer
+ * are controlled by app/layout.tsx.
+ */
 
 import { supabaseServer } from "@/lib/supabaseServer";
 import AdminNav from "@/components/admin/AdminNav";
 
-export default async function BathroomDetailPage({ params }: any) {
+export default async function BathroomDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const supabase = await supabaseServer();
 
   const { data: bathroom, error } = await supabase
@@ -14,24 +25,40 @@ export default async function BathroomDetailPage({ params }: any) {
 
   if (error || !bathroom) {
     return (
-      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <p className="text-gray-700 text-lg">Bathroom not found.</p>
-      </main>
+      <div className="bg-gray-100 flex items-center justify-center py-20">
+        <p className="text-gray-700 text-lg">
+          Bathroom not found.
+        </p>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-100">
+    <div className="bg-gray-100">
       <AdminNav />
 
-      <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-4">{bathroom.name}</h1>
+      <section className="max-w-3xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-4">
+          {bathroom.name}
+        </h1>
 
         <div className="bg-white shadow rounded p-5 space-y-3">
-          <p><span className="font-semibold">Address:</span> {bathroom.address}</p>
-          <p><span className="font-semibold">Zip Code:</span> {bathroom.zip}</p>
-          <p><span className="font-semibold">Neighborhood:</span> {bathroom.neighborhood}</p>
-          <p><span className="font-semibold">Accessibility:</span> {bathroom.accessibility || "—"}</p>
+          <p>
+            <span className="font-semibold">Address:</span>{" "}
+            {bathroom.address}
+          </p>
+          <p>
+            <span className="font-semibold">Zip Code:</span>{" "}
+            {bathroom.zip}
+          </p>
+          <p>
+            <span className="font-semibold">Neighborhood:</span>{" "}
+            {bathroom.neighborhood}
+          </p>
+          <p>
+            <span className="font-semibold">Accessibility:</span>{" "}
+            {bathroom.accessibility || "—"}
+          </p>
         </div>
 
         <div className="flex gap-3 mt-6">
@@ -49,7 +76,7 @@ export default async function BathroomDetailPage({ params }: any) {
             Back
           </a>
         </div>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

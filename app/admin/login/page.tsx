@@ -1,6 +1,13 @@
 // app/admin/login/page.tsx
 "use client";
 
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, viewport height, and footer
+ * are controlled by app/layout.tsx.
+ */
+
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -33,16 +40,17 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+    <div className="bg-gray-100 flex items-center justify-center py-20 px-4">
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
         <h1 className="text-2xl font-bold mb-4 text-center text-black">
           Admin Login
         </h1>
 
         <form onSubmit={handleLogin} className="space-y-4">
-
           <div>
-            <label className="block font-semibold text-black">Email</label>
+            <label className="block font-semibold text-black">
+              Email
+            </label>
             <input
               type="email"
               className="border p-2 rounded w-full text-black"
@@ -54,8 +62,9 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            
-            <label className="block font-semibold text-black">Password</label>
+            <label className="block font-semibold text-black">
+              Password
+            </label>
             <input
               type="password"
               className="border p-2 rounded w-full text-black"
@@ -74,12 +83,13 @@ export default function AdminLoginPage() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 text-white p-3 rounded font-bold hover:bg-blue-700"
           >
             {loading ? "Logging in…" : "Log In"}
           </button>
         </form>
       </div>
-    </main>
+    </div>
   );
 }

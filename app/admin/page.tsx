@@ -1,4 +1,12 @@
+// app/admin/page.tsx
 "use client";
+
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, height, and footer are owned by app/layout.tsx.
+ * Do NOT add <main>, min-h-screen, or h-screen here.
+ */
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
@@ -11,9 +19,7 @@ export default function AdminPage() {
   const [neighborhood, setNeighborhood] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -43,7 +49,7 @@ export default function AdminPage() {
       setLatitude(data[0].lat);
       setLongitude(data[0].lon);
       setMessage("Coordinates found ✔");
-    } catch (err) {
+    } catch {
       setMessage("Error fetching coordinates.");
     }
   }
@@ -58,7 +64,6 @@ export default function AdminPage() {
 
     let photo_url: string | null = null;
 
-    // 1. Upload image if selected
     if (photoFile) {
       const fileExt = photoFile.name.split(".").pop();
       const fileName = `${Date.now()}.${fileExt}`;
@@ -74,14 +79,13 @@ export default function AdminPage() {
         return;
       }
 
-      const { data: urlData } = supabase.storage
+      const { data } = supabase.storage
         .from("bathroom-images")
         .getPublicUrl(filePath);
 
-      photo_url = urlData.publicUrl;
+      photo_url = data.publicUrl;
     }
 
-    // 2. Insert bathroom record
     const { error } = await supabase.from("bathrooms").insert([
       {
         name,
@@ -103,7 +107,6 @@ export default function AdminPage() {
 
     setMessage("Bathroom added successfully!");
 
-    // Reset form
     setName("");
     setAddress("");
     setZip("");
@@ -114,13 +117,13 @@ export default function AdminPage() {
   }
 
   // ------------------------------------------------------------
-  // UI
+  // UI (CONTENT ONLY)
   // ------------------------------------------------------------
   return (
-    <main className="min-h-screen bg-gray-100">
+    <div className="bg-gray-100">
       <AdminNav />
 
-      <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-200">
+      <section className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-200">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Add New Bathroom
         </h1>
@@ -132,37 +135,25 @@ export default function AdminPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* NAME */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Name
-            </label>
+          <Field label="Name">
             <input
               type="text"
-              placeholder="Bathroom name"
               className="p-2 w-full border rounded"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
-          </div>
+          </Field>
 
-          {/* ADDRESS */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Address
-            </label>
-
+          <Field label="Address">
             <div className="flex gap-3">
               <input
                 type="text"
-                placeholder="Full street address"
                 className="p-2 w-full border rounded"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
               />
-
               <button
                 type="button"
                 onClick={handleAutoGeocode}
@@ -171,80 +162,53 @@ export default function AdminPage() {
                 Auto-Locate
               </button>
             </div>
-          </div>
+          </Field>
 
-          {/* ZIP */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              ZIP Code
-            </label>
+          <Field label="ZIP Code">
             <input
               type="text"
-              placeholder="60653"
               className="p-2 w-full border rounded"
               value={zip}
               onChange={(e) => setZip(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* NEIGHBORHOOD */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Neighborhood
-            </label>
+          <Field label="Neighborhood">
             <input
               type="text"
-              placeholder="Bronzeville"
               className="p-2 w-full border rounded"
               value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* LATITUDE */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Latitude (auto)
-            </label>
+          <Field label="Latitude">
             <input
               type="text"
-              placeholder="Auto-filled or enter manually"
               className="p-2 w-full border rounded"
               value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* LONGITUDE */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Longitude (auto)
-            </label>
+          <Field label="Longitude">
             <input
               type="text"
-              placeholder="Auto-filled or enter manually"
               className="p-2 w-full border rounded"
               value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* PHOTO UPLOAD */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Upload Photo
-            </label>
+          <Field label="Upload Photo">
             <input
               type="file"
               accept="image/*"
               className="p-2 border rounded w-full bg-white"
-              onChange={(e) =>
-                setPhotoFile(e.target.files?.[0] ?? null)
-              }
+              onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
             />
-          </div>
+          </Field>
 
-          {/* SUBMIT */}
           <button
             type="submit"
             disabled={loading}
@@ -253,8 +217,27 @@ export default function AdminPage() {
             {loading ? "Saving..." : "Add Bathroom"}
           </button>
         </form>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }
 
+/* ------------------------------------------------------------
+   Small helper for consistent form spacing
+------------------------------------------------------------ */
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-gray-700 font-medium mb-1">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}

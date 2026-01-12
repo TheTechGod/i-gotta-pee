@@ -13,14 +13,9 @@ export default function PublicBathroomsClient({ bathrooms }: Props) {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">
-          Public Bathrooms Near You
-        </h2>
-
-        <a href="/map" className="text-blue-600 hover:underline text-sm">
-          View Map →
-        </a>
+    
+    <div className="flex justify-between items-center mb-4">
+        
       </div>
 
       {/* ZIP SEARCH */}

@@ -1,6 +1,13 @@
 // app/signup/page.tsx
 "use client";
 
+/**
+ * IMPORTANT:
+ * This page renders CONTENT ONLY.
+ * Layout structure, viewport height, and footer
+ * are controlled by app/layout.tsx.
+ */
+
 import { useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 
@@ -18,7 +25,6 @@ export default function SignupPage() {
     e.preventDefault();
     setLoading(true);
 
-    // 🔥 THIS IS WHERE signUp GOES
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -36,7 +42,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="bg-gray-100 flex items-center justify-center py-20">
       <form
         onSubmit={handleSignup}
         className="bg-white p-6 rounded shadow space-y-4 w-full max-w-sm"
@@ -64,11 +70,12 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
         >
           {loading ? "Creating account..." : "Create Account"}
         </button>
       </form>
-    </main>
+    </div>
   );
 }
+
