@@ -25,31 +25,46 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
-      >
-        {/* 
-          Root layout owns structure.
-          Pages render CONTENT ONLY.
-        */}
-        <div className="min-h-screen flex flex-col">
-          {/* Main page content */}
-          <div className="flex-1">
-            {children}
+      <body className="min-h-screen flex flex-col bg-gray-100 text-gray-900">
+        {/* Header */}
+        <header className="border-b border-black bg-white">
+          {/* 
+            If you already render auth/user info here, keep it.
+            This wrapper just adds the border + spacing.
+          */}
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            {/* existing header content lives here */}
           </div>
+        </header>
 
-          {/* Global footer */}
-          <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500 bg-white">
+        {/* Main content */}
+        <main className="flex-1">
+          {children}
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-black bg-white">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-sm text-gray-600">
+            <span>
+              Powered by{" "}
+              <a
+                href="https://integrityprogramming.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-black underline-offset-4 hover:underline"
+              >
+                IntegrityProgramming.com
+              </a>
+            </span>
+
             <a
-              href="https://integrityprogramming.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-800 underline-offset-4 hover:underline"
+              href="/admin/login"
+              className="hover:text-black underline-offset-4 hover:underline"
             >
-              Built by Integrity Programming
+              Admin
             </a>
-          </footer>
-        </div>
+          </div>
+        </footer>
       </body>
     </html>
   );
