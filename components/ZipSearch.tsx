@@ -4,28 +4,41 @@
 import { useState } from "react";
 
 type Props = {
+  defaultValue?: string;
   onSearch: (zip: string) => void;
 };
 
-export default function ZipSearch({ onSearch }: Props) {
-  const [zip, setZip] = useState("");
+export default function ZipSearch({
+  defaultValue = "",
+  onSearch,
+}: Props) {
+  const [value, setValue] = useState(defaultValue);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onSearch(value.trim());
+  }
 
   return (
-    <div className="flex gap-2">
+    <form
+      onSubmit={handleSubmit}
+      className="flex gap-2 mt-4 items-center"
+    >
       <input
         type="text"
-        value={zip}
-        onChange={(e) => setZip(e.target.value)}
-        placeholder="Enter ZIP code"
-        className="border rounded px-3 py-2 w-40"
+        placeholder="Filter by ZIP"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="border rounded px-3 py-2 w-32"
+        inputMode="numeric"
       />
 
       <button
-        onClick={() => onSearch(zip)}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        type="submit"
+        className="px-4 py-2 border rounded hover:bg-gray-200"
       >
-        Search
+        Filter
       </button>
-    </div>
+    </form>
   );
 }

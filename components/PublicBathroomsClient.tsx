@@ -1,46 +1,40 @@
+// components/PublicBathroomsClient.tsx
 "use client";
 
-import ZipSearch from "./ZipSearch";
-import { useZipFilter } from "@/app/hooks/useZipFilter";
-import type { MapBathroom } from "@/lib/types";
+import { useState } from "react";
 
 type Props = {
-  bathrooms: MapBathroom[];
+  defaultValue?: string;
+  onSearch: (zip: string) => void;
 };
 
-export default function PublicBathroomsClient({ bathrooms }: Props) {
-  const { zip, setZip, filtered } = useZipFilter(bathrooms);
+export default function ZipSearch({
+  defaultValue = "",
+  onSearch,
+}: Props) {
+  const [value, setValue] = useState(defaultValue);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onSearch(value.trim());
+  }
 
   return (
-    <>
-    
-    <div className="flex justify-between items-center mb-4">
-        
-      </div>
+    <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
+      <input
+        type="text"
+        placeholder="Filter by ZIP"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="border rounded px-3 py-2 w-32"
+      />
 
-      {/* ZIP SEARCH */}
-      <ZipSearch onSearch={setZip} />
-
-      {/* Empty-state feedback */}
-      {zip && filtered.length === 0 && (
-        <p className="mt-3 text-sm text-gray-500">
-          No bathrooms found for ZIP {zip}
-        </p>
-      )}
-
-      <ul className="space-y-3 mt-4">
-        {filtered.map((b) => (
-          <li
-            key={b.id}
-            className="bg-white p-4 rounded shadow"
-          >
-            <div className="font-semibold">{b.name}</div>
-            <div className="text-sm text-gray-600">
-              {b.address}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </>
+      <button
+        type="submit"
+        className="px-4 py-2 border rounded hover:bg-gray-200"
+      >
+        Filter
+      </button>
+    </form>
   );
 }
