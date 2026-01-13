@@ -1,47 +1,67 @@
 // app/page.tsx
-import { supabaseServer } from "@/lib/supabaseServer";
-import AuthHeader from "@/components/AuthHeader";
-import PublicBathroomsClient from "@/components/PublicBathroomsClient";
+"use client";
 
-export default async function PublicBathroomsPage() {
-  const supabase = await supabaseServer();
+/**
+ * Public Landing Page
+ * - Logo + brand hero
+ * - Login / Signup primary actions
+ * - Soft CTA to go straight to map
+ * - Layout owns footer & overall structure
+ */
 
-  const { data, error } = await supabase
-    .from("bathrooms")
-    .select("id, name, address, zip, neighborhood, accessibility, latitude, longitude")
-    .order("name");
+import Link from "next/link";
 
-  if (error) {
-    console.error(error.message);
-  }
-
-  const safeBathrooms = data ?? [];
-
+export default function LandingPage() {
   return (
-  <div className="bg-gray-100 p-4">
-    {/* TOP APP HEADER */}
-    <header className="flex items-center justify-between p-4 bg-white shadow mb-4">
-      <h1 className="text-xl font-bold">iGottaPee</h1>
-      <AuthHeader />
-    </header>
+    <section className="flex items-center justify-center px-6 py-24 bg-[var(--brand-bg)]">
+      <div className="text-center max-w-md">
 
-    {/* Page title + navigation */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Bathroom List</h2>
+        {/* LOGO */}
+        <img
+          src="/img/logo.jpg"
+          alt="iGottaPee logo"
+          className="w-48 h-auto mx-auto mb-6"
+        />
 
-        <a href="/map" className="text-blue-600 hover:underline text-sm">
-          ← Map View
-        </a>
+        {/* HEADLINE */}
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          iGottaPee
+        </h1>
+
+        <p className="text-slate-700 mb-8">
+          Find a public bathroom fast — no panic, no guessing.
+        </p>
+
+        {/* PRIMARY ACTIONS */}
+        <div className="flex justify-center gap-4 mb-6">
+          <Link
+            href="/login"
+            className="px-6 py-3 rounded-lg font-semibold text-white
+                       bg-[var(--brand-secondary)]
+                       hover:opacity-90 transition"
+          >
+            Log In
+          </Link>
+
+          <Link
+            href="/signup"
+            className="px-6 py-3 rounded-lg font-semibold
+                       border border-slate-300 bg-white text-slate-800
+                       hover:bg-slate-50 transition"
+          >
+            Sign Up
+          </Link>
+        </div>
+
+        {/* SECONDARY CTA */}
+        <Link
+          href="/map"
+          className="text-sm text-blue-600 hover:underline"
+        >
+          Just find a bathroom →
+        </Link>
+
       </div>
-
-    {/* CONTENT */}
-    <section className="max-w-4xl mx-auto">
-      {error && (
-        <p className="text-red-600 mb-4">Failed to load bathrooms</p>
-      )}
-
-      <PublicBathroomsClient bathrooms={safeBathrooms} />
     </section>
-  </div>
-);
+  );
 }

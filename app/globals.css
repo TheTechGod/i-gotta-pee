@@ -14,6 +14,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+
+:root {
+  /* Brand colors (from logo) */
+  --brand-bg: #e6f6f3;          /* soft mint / aqua */
+  --brand-primary: #2fb8b0;    /* teal */
+  --brand-secondary: #2563eb;  /* blue (CTAs) */
+  --brand-accent: #facc15;     /* soft yellow (sparingly) */
+
+  /* Neutrals */
+  --bg-light: #f9fafb;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -27,10 +42,11 @@
    (Fixed version — does NOT override Tailwind)
    ============================================ */
 body {
-  background: var(--background);
-  color: inherit;             /* <— FIXED (no forced gray text) */
+  background-color: var(--bg-light);
+  color: var(--text-main);             /* <— FIXED (no forced gray text) */
   font-family: var(--font-sans);
 }
+
 
 /* ============================================
    ANIMATIONS

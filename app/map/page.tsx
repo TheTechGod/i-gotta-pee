@@ -36,7 +36,7 @@ export default async function PublicMapPage() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Bathroom Map</h2>
 
-        <a href="/" className="text-blue-600 hover:underline text-sm">
+        <a href="/list" className="text-blue-600 hover:underline text-sm">
           ← List View
         </a>
       </div>
