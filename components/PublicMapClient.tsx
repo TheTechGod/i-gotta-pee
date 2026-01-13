@@ -45,7 +45,8 @@ export default function PublicMapClient({ bathrooms }: Props) {
     <>
       {/* ZIP SEARCH */}
       <div className="mb-4">
-        <ZipSearch onSearch={setZipFilter} />
+        <ZipSearch value={zipFilter} onSearch={setZipFilter} />
+
       </div>
 
       <p className="text-gray-700 mb-4">

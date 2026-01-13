@@ -1,7 +1,6 @@
-// components/ZipSearch.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { ChangeEvent, KeyboardEvent } from "react";
 
 type Props = {
   value: string;
@@ -9,25 +8,31 @@ type Props = {
 };
 
 export default function ZipSearch({ value, onSearch }: Props) {
-  const [input, setInput] = useState(value);
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    onSearch(e.target.value);
+  }
 
-  // Keep input synced with URL changes
-  useEffect(() => {
-    setInput(value);
-  }, [value]);
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      onSearch(value.trim());
+    }
+  }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 items-center">
       <input
         type="text"
+        value={value}
         placeholder="Filter by ZIP"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        inputMode="numeric"
         className="border rounded px-3 py-2 w-40"
       />
 
       <button
-        onClick={() => onSearch(input.trim())}
+        type="button"
+        onClick={() => onSearch(value.trim())}
         className="px-4 py-2 border rounded hover:bg-gray-200"
       >
         Filter
