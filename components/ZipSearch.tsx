@@ -1,44 +1,37 @@
 // components/ZipSearch.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
-  defaultValue?: string;
+  value: string;
   onSearch: (zip: string) => void;
 };
 
-export default function ZipSearch({
-  defaultValue = "",
-  onSearch,
-}: Props) {
-  const [value, setValue] = useState(defaultValue);
+export default function ZipSearch({ value, onSearch }: Props) {
+  const [input, setInput] = useState(value);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    onSearch(value.trim());
-  }
+  // Keep input synced with URL changes
+  useEffect(() => {
+    setInput(value);
+  }, [value]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex gap-2 mt-4 items-center"
-    >
+    <div className="flex gap-2">
       <input
         type="text"
         placeholder="Filter by ZIP"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="border rounded px-3 py-2 w-32"
-        inputMode="numeric"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="border rounded px-3 py-2 w-40"
       />
 
       <button
-        type="submit"
+        onClick={() => onSearch(input.trim())}
         className="px-4 py-2 border rounded hover:bg-gray-200"
       >
         Filter
       </button>
-    </form>
+    </div>
   );
 }

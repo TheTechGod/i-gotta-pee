@@ -1,40 +1,72 @@
 // components/PublicBathroomsClient.tsx
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import ZipSearch from "./ZipSearch";
+import type { MapBathroom } from "@/lib/types";
 
 type Props = {
-  defaultValue?: string;
-  onSearch: (zip: string) => void;
+  bathrooms: MapBathroom[];
+  page: number;
+  pageSize: number;
+  total: number;
 };
 
-export default function ZipSearch({
-  defaultValue = "",
-  onSearch,
+export default function PublicBathroomsClient({
+  bathrooms,
+  page,
+  pageSize,
+  total,
 }: Props) {
-  const [value, setValue] = useState(defaultValue);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    onSearch(value.trim());
+  const zip = searchParams.get("zip") ?? "";
+
+  const from = (page - 1) * pageSize + 1;
+  const to = Math.min(from + pageSize - 1, total);
+
+  function setZip(nextZip: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextZip) {
+      params.set("zip", nextZip);
+      params.set("page", "1"); // reset pagination on new filter
+    } else {
+      params.delete("zip");
+    }
+    router.push(`/list?${params.toString()}`);
+  }
+
+  function goToPage(nextPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(nextPage));
+    router.push(`/list?${params.toString()}`);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-      <input
-        type="text"
-        placeholder="Filter by ZIP"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="border rounded px-3 py-2 w-32"
-      />
+    <>
+      {/* ZIP SEARCH */}
+      <ZipSearch value={zip} onSearch={setZip} />
 
-      <button
-        type="submit"
-        className="px-4 py-2 border rounded hover:bg-gray-200"
-      >
-        Filter
-      </button>
-    </form>
+
+      {/* RESULT COUNT */}
+      <p className="mt-4 text-sm text-gray-600">
+        Showing {from}–{to} of {total}
+      </p>
+
+      {/* LIST */}
+      <ul className="space-y-3 mt-4">
+        {bathrooms.map((b) => (
+          <li key={b.id} className="bg-white p-4 rounded shadow">
+            <div className="font-semibold">{b.name}</div>
+            <div className="text-sm text-gray-600">
+              {b.address}
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      
+    </>
   );
 }
